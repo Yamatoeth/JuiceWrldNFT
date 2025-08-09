@@ -1,33 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { ConnectButton, TransactionButton, useActiveAccount, useReadContract } from "thirdweb/react";
-import { getContract } from "thirdweb";
-import { sepolia } from "thirdweb/chains";
-import { claimTo } from "thirdweb/extensions/erc1155";
 import thirdwebIcon from "@public/thirdweb.svg";
-import { client } from "./client";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/components/ui/use-toast";
 
 const CONTRACT_ADDRESS = "0xe7F4ABC55d3B05a9bf7619400c1235Bb2A0cBF09";
 
 export default function Home() {
-  const account = useActiveAccount();
-  const { toast } = useToast();
-  
-  const contract = getContract({
-    client,
-    chain: sepolia,
-    address: CONTRACT_ADDRESS,
-  });
-
-  // For now, we'll use placeholder values since the exact contract methods depend on your contract
-  // You'll need to replace these with the actual contract calls for your ERC1155 contract
-  const claimed = 0; // Replace with actual contract read
-  const total = 1000; // Replace with actual contract read
+  // For demo purposes, we'll use static values
+  const claimed = 150;
+  const total = 1000;
   const progressPercent = Math.min((claimed / total) * 100, 100);
 
   return (
@@ -40,34 +24,26 @@ export default function Home() {
           priority
         />
         <CardContent className="text-center">
-          <CardTitle className="text-4xl font-bold">Mint your NFT on Sepolia</CardTitle>
+          <CardTitle className="text-4xl font-bold">Juice WRLD NFT Collection</CardTitle>
           <CardDescription className="text-zinc-300 mt-2">
-            Mint your NFT for free on Sepolia testnet. Just connect your wallet and mint 1 NFT for 0.0001 ETH.
+            Mint your NFT for free on Sepolia testnet. Connect your wallet and mint 1 NFT for 0.0001 ETH.
           </CardDescription>
         </CardContent>
 
         <div className="flex space-x-4 w-full justify-center">
-          <ConnectButton client={client} />
+          <Button 
+            className="px-6 py-3 rounded-lg font-semibold shadow-md transition bg-blue-600 hover:bg-blue-700"
+            onClick={() => alert("Wallet connection will be available soon!")}
+          >
+            Connect Wallet
+          </Button>
           
-          {account && (
-            <TransactionButton
-              transaction={() => claimTo({
-                contract,
-                to: account.address,
-                tokenId: 0n, // Adjust based on your token ID
-                quantity: 1n,
-              })}
-              onTransactionConfirmed={() => {
-                toast({
-                  title: "Successfully minted NFT!",
-                  description: "Your NFT has been minted successfully!",
-                });
-              }}
-              className="px-6 py-3 rounded-lg font-semibold shadow-md transition bg-blue-600 hover:bg-blue-700"
-            >
-              Mint 1 NFT (0.0001 ETH)
-            </TransactionButton>
-          )}
+          <Button 
+            className="px-6 py-3 rounded-lg font-semibold shadow-md transition bg-purple-600 hover:bg-purple-700"
+            onClick={() => alert("Minting will be available after wallet connection!")}
+          >
+            Mint 1 NFT (0.0001 ETH)
+          </Button>
         </div>
 
         <div className="w-full">
@@ -79,7 +55,11 @@ export default function Home() {
         </div>
 
         <div className="mt-4 text-xs text-zinc-400 italic">
-          Contract deployed on Sepolia testnet
+          Contract deployed on Sepolia testnet: {CONTRACT_ADDRESS}
+        </div>
+        
+        <div className="mt-2 text-xs text-zinc-500 text-center">
+          🚧 This is a demo version. Wallet connectivity coming soon!
         </div>
       </Card>
     </main>

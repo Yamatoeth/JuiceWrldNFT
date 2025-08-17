@@ -1,7 +1,6 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 "use client";
-
 import React, { useState } from "react";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseEther } from "viem";
 import contractABI from "./contractABI.json";

@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { ConnectButton, useActiveAccount, useReadContract } from "thirdweb/react";
-import { getContract } from "thirdweb";
+import { ConnectButton, useActiveAccount, useReadContract, useSendTransaction } from "thirdweb/react";
+import { getContract, prepareContractCall } from "thirdweb";
+import contractABI from "./contractABI.json";
 import { client } from "./client";
 import { sepolia } from "thirdweb/chains";
 import Image from "next/image";
@@ -14,33 +15,56 @@ import { Progress } from "@/components/ui/progress";
 const CONTRACT_ADDRESS = "0xe7F4ABC55d3B05a9bf7619400c1235Bb2A0cBF09";
 
 export default function Home() {
-  // Contract values
   const [mintAmount, setMintAmount] = React.useState(1);
   const account = useActiveAccount();
 
-  // Instancier le contrat
-  const contract = getContract({
+  // Instancier le contrat une seule fois
+  const contract = React.useMemo(() => getContract({
     client,
     address: CONTRACT_ADDRESS,
-    chain: sepolia
-  });
+    chain: sepolia,
+    abi: contractABI
+  }), []);
 
   // Lire les valeurs du contrat
-    const { data: claimedSupply } = useReadContract({
-      contract,
-      method: "totalClaimedSupply",
-      params: []
-    });
-    const { data: totalSupply } = useReadContract({
-      contract,
-      method: "totalSupply",
-      params: []
-    });
+  const { data: claimedSupply } = useReadContract({
+    contract,
+    method: "totalClaimedSupply",
+    params: []
+  });
+  const { data: totalSupply } = useReadContract({
+    contract,
+    method: "totalSupply",
+    params: []
+  });
 
   const claimed = claimedSupply ? Number(claimedSupply) : 0;
   const total = totalSupply ? Number(totalSupply) : 1000;
   const price = '0.001 ETH'; // Remplacer par la vraie valeur si disponible
   const progressPercent = Math.min((claimed / total) * 100, 100);
+
+  // Hook pour envoyer la transaction
+  const { mutate: sendTransaction, status } = useSendTransaction();
+
+  // Fonction pour minter le NFT
+  const handleMint = async () => {
+    if (!account) return;
+    try {
+      // Récupérer la fonction ABI 'mintTo' du fichier JSON
+      const mintToAbi = (contractABI as any[]).find(f => f.name === "mintTo" && f.type === "function");
+      if (!mintToAbi) throw new Error("La fonction 'mintTo' n'existe pas dans l'ABI du contrat.");
+      const tx = prepareContractCall({
+        contract,
+        method: mintToAbi,
+        params: [account.address, mintAmount],
+        value: BigInt(1e15), // 0.001 ETH en wei
+      });
+      await sendTransaction(tx);
+    } catch (err) {
+      console.error("Mint failed", err);
+      alert("Mint failed: " + (err?.message || err));
+    }
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-950 via-zinc-900 to-blue-900 flex items-center justify-center p-0 relative">
@@ -73,7 +97,7 @@ export default function Home() {
               </div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
-                <span className="font-mono text-green-300">Public Mint</span>
+                
                 <span className="ml-4 w-2 h-2 rounded-full bg-green-400 inline-block" />
                 <span className="font-mono text-green-300">Live</span>
                 <span className="ml-2 text-xs text-zinc-400">ENDS IN ∞</span>
@@ -99,8 +123,10 @@ export default function Home() {
               >Max</Button>
               <Button
                 className="px-6 py-2 rounded font-semibold shadow-md transition bg-blue-700 hover:bg-blue-800 text-white ml-2"
-                onClick={() => alert('Minting will be available soon!')}
-              >Mint</Button>
+                onClick={handleMint}
+              >
+                Mint
+              </Button>
             </div>
           </Card>
           {/* NFT image right */}

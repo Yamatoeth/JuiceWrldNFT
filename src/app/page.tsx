@@ -26,14 +26,16 @@ export default function Home() {
   });
 
   // Lire les valeurs du contrat
-  const { data: claimedSupply } = useReadContract({
-    contract,
-    method: "totalClaimedSupply"
-  });
-  const { data: totalSupply } = useReadContract({
-    contract,
-    method: "totalSupply"
-  });
+    const { data: claimedSupply } = useReadContract({
+      contract,
+      method: "totalClaimedSupply",
+      params: []
+    });
+    const { data: totalSupply } = useReadContract({
+      contract,
+      method: "totalSupply",
+      params: []
+    });
 
   const claimed = claimedSupply ? Number(claimedSupply) : 0;
   const total = totalSupply ? Number(totalSupply) : 1000;

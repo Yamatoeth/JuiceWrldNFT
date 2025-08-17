@@ -23,7 +23,7 @@ export default function Home() {
     client,
     address: CONTRACT_ADDRESS,
     chain: sepolia,
-    abi: contractABI
+    abi: contractABI as any
   }), []);
 
   // Lire les valeurs du contrat

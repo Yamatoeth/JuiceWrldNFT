@@ -16,6 +16,8 @@ const CONTRACT_ADDRESS = "0xe7F4ABC55d3B05a9bf7619400c1235Bb2A0cBF09";
 
 export default function Home() {
   const [mintAmount, setMintAmount] = React.useState(1);
+  const [minting, setMinting] = React.useState(false);
+  const [mintMessage, setMintMessage] = React.useState<string|null>(null);
   const account = useActiveAccount();
 
   // Instancier le contrat une seule fois
@@ -49,20 +51,22 @@ export default function Home() {
   // Fonction pour minter le NFT
   const handleMint = async () => {
     if (!account) return;
+    setMinting(true);
+    setMintMessage(null);
+
     try {
-      // Récupérer la fonction ABI 'mintTo' du fichier JSON
-      const mintToAbi = (contractABI as any[]).find(f => f.name === "mintTo" && f.type === "function");
-      if (!mintToAbi) throw new Error("La fonction 'mintTo' n'existe pas dans l'ABI du contrat.");
-      const tx = prepareContractCall({
-        contract,
-        method: mintToAbi,
-        params: [account.address, mintAmount],
+      // Appelle directement la fonction 'mintTo' du contrat
+      const result = await contract.call("mintTo", [account.address, mintAmount], {
         value: BigInt(1e15), // 0.001 ETH en wei
       });
-      await sendTransaction(tx);
+
+      setMintMessage("Transaction envoyée ! Vérifie ton wallet pour signer.");
+      console.log("Mint result:", result);
     } catch (err: any) {
       console.error("Mint failed", err);
-      alert("Mint failed: " + (err?.message || err));
+      setMintMessage("Erreur mint: " + (err?.message || err));
+    } finally {
+      setMinting(false);
     }
   };
 
@@ -122,11 +126,18 @@ export default function Home() {
                 onClick={() => setMintAmount(1)}
               >Max</Button>
               <Button
-                className="px-6 py-2 rounded font-semibold shadow-md transition bg-blue-700 hover:bg-blue-800 text-white ml-2"
+                className="px-6 py-2 rounded font-semibold shadow-md transition bg-blue-700 hover:bg-blue-800 text-white ml-2 flex items-center gap-2"
                 onClick={handleMint}
+                disabled={minting}
               >
-                Mint
+                {minting ? (
+                  <span className="animate-spin w-4 h-4 border-2 border-white border-t-blue-700 rounded-full mr-2"></span>
+                ) : null}
+                {minting ? "Envoi..." : "Mint"}
               </Button>
+              {mintMessage && (
+                <div className="mt-2 text-xs text-center text-blue-400 font-mono">{mintMessage}</div>
+              )}
             </div>
           </Card>
           {/* NFT image right */}

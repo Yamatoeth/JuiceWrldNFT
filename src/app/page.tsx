@@ -60,7 +60,7 @@ export default function Home() {
         value: BigInt(1e15), // 0.001 ETH en wei
       });
       await sendTransaction(tx);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Mint failed", err);
       alert("Mint failed: " + (err?.message || err));
     }

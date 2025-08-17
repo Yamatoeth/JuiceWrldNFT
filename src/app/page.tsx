@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ConnectButton, useActiveAccount, useReadContract, useSendTransaction } from "thirdweb/react";
+import { ConnectButton, useActiveAccount, useReadContract, useContractWrite } from "thirdweb/react";
 import { getContract, prepareContractCall } from "thirdweb";
 import contractABI from "./contractABI.json";
 import { client } from "./client";
@@ -45,8 +45,8 @@ export default function Home() {
   const price = '0.001 ETH'; // Remplacer par la vraie valeur si disponible
   const progressPercent = Math.min((claimed / total) * 100, 100);
 
-  // Hook pour envoyer la transaction
-  const { mutate: sendTransaction, status } = useSendTransaction();
+  // Hook pour minter via useContractWrite
+  const { mutateAsync: mintNFT } = useContractWrite(contract, "mintTo");
 
   // Fonction pour minter le NFT
   const handleMint = async () => {
@@ -55,11 +55,9 @@ export default function Home() {
     setMintMessage(null);
 
     try {
-      // Appelle directement la fonction 'mintTo' du contrat
-      const result = await contract.call("mintTo", [account.address, mintAmount], {
+      const result = await mintNFT([account.address, mintAmount], {
         value: BigInt(1e15), // 0.001 ETH en wei
       });
-
       setMintMessage("Transaction envoyée ! Vérifie ton wallet pour signer.");
       console.log("Mint result:", result);
     } catch (err: any) {

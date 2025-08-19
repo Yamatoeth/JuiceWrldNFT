@@ -1,5 +1,5 @@
 "use client";
-import { WagmiProvider, createConfig, http } from 'wagmi';
+import { WagmiProvider, createConfig, http, fallback } from 'wagmi';
 import { sepolia } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -12,7 +12,18 @@ const inter = Inter({ subsets: ["latin"] });
 const config = createConfig({
   chains: [sepolia],
   transports: {
-    [sepolia.id]: http(),
+    [sepolia.id]: fallback([
+      http('https://ethereum-sepolia-rpc.publicnode.com', {
+        timeout: 15_000,
+      }),
+      http('https://sepolia.drpc.org', {
+        timeout: 15_000,
+      }),
+      http('https://rpc2.sepolia.org', {
+        timeout: 15_000,
+      }),
+      http(), // fallback vers le RPC par défaut
+    ]),
   },
 });
 const queryClient = new QueryClient();

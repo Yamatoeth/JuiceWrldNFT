@@ -8,11 +8,24 @@
       },
       {
         "internalType": "uint256",
-        "name": "quantity",
+        "name": "amount",
         "type": "uint256"
       }
     ],
-    "name": "mintTo",
+    "name": "claim",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "claim",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"

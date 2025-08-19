@@ -1,50 +1,23 @@
 "use client";
-import React, { useState } from "react";
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { parseEther } from "viem";
-import contractABI from "./contractABI.json";
+import React from "react";
+import Header from "@/components/Header";
+import MintCard from "@/components/MintCard";
+import { useMint } from "@/hooks/useMint";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Card, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 
-const CONTRACT_ADDRESS = "0xe7F4ABC55d3B05a9bf7619400c1235Bb2A0cBF09";
+export const dynamic = "force-dynamic";
 
 export default function Home() {
-  const [mintAmount, setMintAmount] = useState(1);
-  const [txHash, setTxHash] = useState<`0x${string}` | undefined>();
-  const [loading, setLoading] = useState(false);
-  const [mintMessage, setMintMessage] = useState<string | null>(null);
-  const { address } = useAccount();
-  const { writeContractAsync } = useWriteContract();
-  const { isLoading: isTxLoading, isSuccess: isTxSuccess } = useWaitForTransactionReceipt({
-    hash: txHash,
-  });
-
-  // Fonction de mint via wagmi
-  const handleMint = async () => {
-    if (!address) return;
-    setLoading(true);
-    setMintMessage(null);
-    try {
-      const tx = await writeContractAsync({
-        address: CONTRACT_ADDRESS as `0x${string}`,
-        abi: contractABI,
-        functionName: 'mintTo',
-        args: [address, mintAmount],
-        value: parseEther('0.001'),
-      });
-      if (tx) {
-        setTxHash(tx as `0x${string}`);
-        setMintMessage("Transaction envoyée ! Vérifie ton wallet pour signer.");
-      }
-    } catch (err: any) {
-      setMintMessage("Erreur mint: " + (err?.message || err));
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    mintAmount,
+    setMintAmount,
+    handleMint,
+    loading,
+    isTxLoading,
+    mintMessage,
+    isTxSuccess,
+    address,
+  } = useMint();
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-950 via-zinc-900 to-blue-900 flex items-center justify-center p-0 relative">
@@ -52,63 +25,19 @@ export default function Home() {
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="w-full h-full bg-gradient-radial from-blue-900/60 via-blue-800/30 to-transparent blur-2xl" />
       </div>
-      {/* Header */}
-      <header className="fixed top-0 left-0 w-full bg-zinc-900/90 border-b border-zinc-800 shadow-md z-30 flex items-center justify-between px-8 py-3">
-        <div className="flex flex-col">
-          <span className="font-mono text-2xl font-bold text-white tracking-wide">JuiceWRLD</span>
-          <span className="font-mono text-xs text-zinc-400 mt-1">ERC721/1155 Smart Contract Demo</span>
-        </div>
-        <div className="flex items-center gap-4">
-          {address && (
-            <span className="font-mono text-xs text-green-400 bg-zinc-800 px-3 py-1 rounded-lg">{address.slice(0, 6)}...{address.slice(-4)}</span>
-          )}
-          <ConnectButton />
-        </div>
-      </header>
+      <Header address={address} />
       <div className="relative z-10 flex flex-col items-center w-full pt-20">
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-4xl mx-auto">
-          {/* Card left */}
-          <Card className="w-full md:w-[480px] bg-zinc-900/95 rounded-2xl shadow-2xl p-10 flex flex-col space-y-8 border border-zinc-700">
-            <CardTitle className="text-3xl md:text-4xl font-mono font-extrabold text-white mb-2">JuiceWRLD NFT</CardTitle>
-            <div className="bg-green-900/40 rounded-lg p-4 mb-2">
-              {/* ...claimed/total supply, price, progress bar... (à adapter si tu veux) */}
-              <div className="mt-2 bg-green-950 rounded p-2 text-center">
-                <span className="font-mono text-green-200">SALE PRICE</span><br />
-                <span className="font-bold text-green-300 text-lg">0.001 ETH</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-zinc-300 text-sm"># to Mint</span>
-              <input
-                type="number"
-                min={1}
-                max={1}
-                value={mintAmount}
-                onChange={e => setMintAmount(Number(e.target.value))}
-                className="w-16 px-2 py-1 rounded bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
-              />
-              <Button
-                className="px-3 py-1 rounded bg-zinc-700 text-white text-xs font-mono"
-                onClick={() => setMintAmount(1)}
-              >Max</Button>
-              <Button
-                className="px-6 py-2 rounded font-semibold shadow-md transition bg-blue-700 hover:bg-blue-800 text-white ml-2 flex items-center gap-2"
-                onClick={handleMint}
-                disabled={loading || isTxLoading}
-              >
-                {(loading || isTxLoading) ? (
-                  <span className="animate-spin w-4 h-4 border-2 border-white border-t-blue-700 rounded-full mr-2"></span>
-                ) : null}
-                {(loading || isTxLoading) ? "Envoi..." : "Mint"}
-              </Button>
-              {mintMessage && (
-                <div className="mt-2 text-xs text-center text-blue-400 font-mono">{mintMessage}</div>
-              )}
-              {isTxSuccess && (
-                <div className="mt-2 text-xs text-center text-green-400 font-mono">Mint réussi !</div>
-              )}
-            </div>
-          </Card>
+          <MintCard
+            mintAmount={mintAmount}
+            setMintAmount={setMintAmount}
+            handleMint={handleMint}
+            loading={loading}
+            isTxLoading={isTxLoading}
+            mintMessage={mintMessage}
+            isTxSuccess={isTxSuccess}
+            address={address}
+          />
           {/* NFT image right */}
           <div className="flex items-center justify-center w-full md:w-[320px]">
             <div className="relative w-72 h-72 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-400 via-blue-700 to-blue-900 border-8 border-white shadow-2xl">

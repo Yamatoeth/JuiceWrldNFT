@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseEther } from "viem";
-// @ts-ignore
 import contractABI from "../lib/contractABI.json";
+
 // Export your contract address here
-export const CONTRACT_ADDRESS = "0xYourContractAddressHere";
+export const CONTRACT_ADDRESS = "0xe7F4ABC55d3B05a9bf7619400c1235Bb2A0cBF09";
 
 // If you need to import JSON modules, ensure "resolveJsonModule": true is set in your tsconfig.json.
 // The following declaration is not needed and causes errors, so it has been removed.

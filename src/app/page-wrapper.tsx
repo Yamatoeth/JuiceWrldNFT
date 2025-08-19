@@ -2,7 +2,7 @@
 import NextDynamic from "next/dynamic";
 import { Suspense } from "react";
 
-// Dynamic import to avoid SSR issues with wagmi
+// Dynamic import to avoid SSR issues
 const DynamicMintApp = NextDynamic(() => import("./MintApp"), {
   ssr: false,
   loading: () => (
@@ -11,8 +11,6 @@ const DynamicMintApp = NextDynamic(() => import("./MintApp"), {
     </div>
   ),
 });
-
-export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
@@ -25,3 +23,5 @@ export default function Page() {
     </Suspense>
   );
 }
+
+export const dynamic = "force-dynamic";

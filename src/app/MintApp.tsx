@@ -19,8 +19,7 @@ export default function MintApp() {
           </h1>
           <p className="text-2xl text-purple-200 mb-2">NFT COLLECTION</p>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Collectionnez des NFT uniques en l&apos;honneur du légendaire Juice WRLD. 
-            Chaque NFT est un hommage à son héritage musical intemporel.
+            NFT Smart contract using claim function  
           </p>
         </div>
 
@@ -46,11 +45,9 @@ export default function MintApp() {
 
         <div className="mt-16 text-center">
           <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/20 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-white mb-4">À propos de la collection</h3>
+            <h3 className="text-2xl font-bold text-white mb-4">About</h3>
             <p className="text-gray-300 leading-relaxed">
-              Cette collection NFT rend hommage à Jarad Anthony Higgins, connu sous le nom de Juice WRLD, 
-              un artiste qui a marqué une génération entière avec sa musique authentique et ses paroles profondes. 
-              Chaque NFT capture l&apos;essence de son art et de son impact sur la culture hip-hop moderne.
+              This page was built with React for a modern and responsive interface. It integrates RainbowKit for seamless wallet connections, Wagmi for robust Ethereum interactions, and Thirdweb to deploy and interact easily with smart contracts. This project showcases my skills in web3 development, modern frontend integration, and blockchain interaction.
             </p>
           </div>
         </div>

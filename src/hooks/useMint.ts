@@ -44,12 +44,12 @@ export function useMint() {
           1n,                                           // _quantity
           "0x0000000000000000000000000000000000000000", // _currency (native)
           0n,                                           // _pricePerToken
-          {
-            proof: [] as `0x${string}`[],
-            quantityLimitPerWallet: 1n,
-            pricePerToken: 0n,
-            currency: "0x0000000000000000000000000000000000000000",
-          } as any,                                     // _allowlistProof (tuple object)
+          [
+            [] as `0x${string}`[],
+            1n,
+            0n,
+            "0x0000000000000000000000000000000000000000"
+          ] as readonly [readonly `0x${string}`[], bigint, bigint, `0x${string}`],
           "0x",                                         // _data
         ],
         value: 0n,

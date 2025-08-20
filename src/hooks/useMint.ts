@@ -42,14 +42,14 @@ export function useMint() {
           address,                                      // _receiver
           0n,                                           // _tokenId
           1n,                                           // _quantity
-          "0x0000000000000000000000000000000000000000", // _currency (native)
+          "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE", // _currency (native)
           0n,                                           // _pricePerToken
-          [
-            [] as `0x${string}`[],
-            1n,
-            0n,
-            "0x0000000000000000000000000000000000000000"
-          ] as readonly [readonly `0x${string}`[], bigint, bigint, `0x${string}`],
+          {
+            proof: [],
+            quantityLimitPerWallet: 0n,
+            pricePerToken: 115792089237316195423570985008687907853269984665640564039457584007913129639935n,
+            currency: "0x0000000000000000000000000000000000000000"
+          },                                            // _allowlistProof
           "0x",                                         // _data
         ],
         value: 0n,

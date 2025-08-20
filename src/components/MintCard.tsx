@@ -29,7 +29,7 @@ const MintCard: React.FC<MintCardProps> = ({
     <div className="bg-green-900/40 rounded-lg p-4 mb-2">
       <div className="mt-2 bg-green-950 rounded p-2 text-center">
         <span className="font-mono text-green-200">SALE PRICE</span><br />
-        <span className="font-bold text-green-300 text-lg">0.001 ETH</span>
+        <span className="font-bold text-green-300 text-lg">FREE</span>
       </div>
     </div>
     <div className="flex items-center gap-2 mb-2">

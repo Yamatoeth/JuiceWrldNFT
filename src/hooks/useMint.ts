@@ -35,7 +35,7 @@ export function useMint() {
         abi: contractABI,
         functionName: "claim",
         args: [address, 1], // 1 NFT pour le wallet connecté
-        value: parseEther("0.001"), // prix total pour 1 NFT
+        value: parseEther("0"), // prix total pour 1 NFT
       });
 
     } catch (err: any) {

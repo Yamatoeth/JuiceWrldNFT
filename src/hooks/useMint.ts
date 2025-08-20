@@ -1,10 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { parseEther } from "viem";
 import contractABI from "../lib/contractABI.json";
-import { useContract } from "thirdweb/react";
-import { claimTo } from "thirdweb/extensions/erc1155";
 
 // Adresse de ton contrat
 export const CONTRACT_ADDRESS = "0x698981548FA15810FE9FE5f41e9D9713f5e5DECe";
@@ -14,9 +12,13 @@ export function useMint() {
   const [mintMessage, setMintMessage] = useState<string | null>(null);
   const { address } = useAccount();
 
-  // Get contract instance
-  const { contract } = useContract(CONTRACT_ADDRESS);
-  const { mutate: sendTransaction, data: txHash, error: writeError, isPending: isWritePending } = useSendTransaction();
+  // Use wagmi's useWriteContract hook
+  const { 
+    writeContract, 
+    data: txHash, 
+    error: writeError, 
+    isPending: isWritePending 
+  } = useWriteContract();
 
   // Suivi de la transaction
   const { isLoading: isTxLoading, isSuccess: isTxSuccess } = useWaitForTransactionReceipt({
@@ -32,14 +34,12 @@ export function useMint() {
     try {
       setMintMessage("Ouverture de MetaMask...");
 
-      const transaction = claimTo({
-        contract,
-        to: address,
-        tokenId: 0,
-        amount: 1,
+      writeContract({
+        address: CONTRACT_ADDRESS as `0x${string}`,
+        abi: contractABI,
+        functionName: 'claim',
+        args: [address, 1n], // to address, amount
       });
-
-      await sendTransaction(transaction);
     } catch (err: any) {
       console.error("Mint error:", err);
       setMintMessage(`Erreur: ${err?.message || "Erreur inconnue"}`);

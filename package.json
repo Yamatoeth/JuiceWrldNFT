@@ -28,7 +28,6 @@
     "react-dom": "^18.3",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
-    "thirdweb": "^5",
     "unfetch": "^5.0.0",
     "unstorage": "^1.16.1",
     "viem": "2.10.9",

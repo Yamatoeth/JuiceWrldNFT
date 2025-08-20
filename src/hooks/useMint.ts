@@ -34,11 +34,25 @@ export function useMint() {
     try {
       setMintMessage("Ouverture de MetaMask...");
 
-      writeContract({
+      await writeContract({
         address: CONTRACT_ADDRESS as `0x${string}`,
         abi: contractABI,
-        functionName: 'claim',
-        args: [address, 1n], // to address, amount
+        functionName: "claim",
+        args: [
+          address,                                      // _receiver
+          0n,                                           // _tokenId
+          1n,                                           // _quantity
+          "0x0000000000000000000000000000000000000000", // _currency (native)
+          0n,                                           // _pricePerToken
+          {
+            proof: [],
+            quantityLimitPerWallet: 0n,
+            pricePerToken: 0n,
+            currency: "0x0000000000000000000000000000000000000000",
+          },                                            // _allowlistProof
+          "0x",                                         // _data
+        ],
+        value: 0n,
       });
     } catch (err: any) {
       console.error("Mint error:", err);

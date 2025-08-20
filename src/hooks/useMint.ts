@@ -44,12 +44,12 @@ export function useMint() {
           1n,                                           // _quantity
           "0x0000000000000000000000000000000000000000", // _currency (native)
           0n,                                           // _pricePerToken
-          {
-            proof: [],
-            quantityLimitPerWallet: 1n,
-            pricePerToken: 0n,
-            currency: "0x0000000000000000000000000000000000000000",
-          },                                            // _allowlistProof
+          [
+            [], 
+            1n,
+            0n,
+            "0x0000000000000000000000000000000000000000"
+          ],                                            // _allowlistProof (tuple array)
           "0x",                                         // _data
         ],
         value: 0n,

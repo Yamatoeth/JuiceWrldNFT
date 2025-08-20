@@ -39,18 +39,18 @@ export function useMint() {
         abi: contractABI,
         functionName: "claim",
         args: [
-          address,                                      // _receiver
-          0n,                                           // _tokenId
-          1n,                                           // _quantity
-          "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE", // _currency (native)
-          0n,                                           // _pricePerToken
+          address, // _receiver
+          0n,      // _tokenId as bigint
+          1n,      // _quantity as bigint
+          "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE", // _currency
+          0n,      // _pricePerToken as bigint
           {
             proof: [],
             quantityLimitPerWallet: 0n,
             pricePerToken: 115792089237316195423570985008687907853269984665640564039457584007913129639935n,
             currency: "0x0000000000000000000000000000000000000000"
-          },                                            // _allowlistProof
-          "0x",                                         // _data
+          }, // _allowlistProof
+          "0x", // _data
         ],
         value: 0n,
       });

@@ -46,7 +46,7 @@ export function useMint() {
           0n,                                           // _pricePerToken
           {
             proof: [],
-            quantityLimitPerWallet: 0n,
+            quantityLimitPerWallet: 1n,
             pricePerToken: 0n,
             currency: "0x0000000000000000000000000000000000000000",
           },                                            // _allowlistProof

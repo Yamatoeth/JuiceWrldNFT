@@ -1,5 +1,5 @@
 "use client";
-import { WagmiProvider, createConfig, http } from 'wagmi';
+import { WagmiProvider, createConfig } from 'wagmi';
 import { sepolia } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RainbowKitProvider, connectorsForWallets } from '@rainbow-me/rainbowkit';
@@ -7,6 +7,7 @@ import { metaMaskWallet, rainbowWallet, walletConnectWallet } from '@rainbow-me/
 import '@rainbow-me/rainbowkit/styles.css';
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { http } from 'viem'; // si ce n’est pas déjà importé
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,8 +26,7 @@ const config = createConfig({
   connectors,
   chains: [sepolia],
   transports: {
-    // Utiliser le provider par défaut pour les transactions (MetaMask)
-    [sepolia.id]: http(),
+    [sepolia.id]: http('https://sepolia.infura.io/v3/80912df9f4c3459288ccc6d955d7bc5d'),
   },
 });
 const queryClient = new QueryClient();

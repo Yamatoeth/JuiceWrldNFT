@@ -12,8 +12,8 @@ export function useMint() {
   const [mintMessage, setMintMessage] = useState<string | null>(null);
   const { address } = useAccount();
 
-  // Hook Wagmi pour écrire sur le contrat - pas besoin de signer dans wagmi v2
-  const { writeContract, data: txHash, error: writeError, isPending: isWritePending } = useWriteContract();
+  // Hook pour écrire sur le contrat
+  const { writeContract, data: txHash, error: writeError, isPending: isWritePending } = useWriteContract({});
 
   // Suivi de la transaction
   const { isLoading: isTxLoading, isSuccess: isTxSuccess } = useWaitForTransactionReceipt({
@@ -29,26 +29,13 @@ export function useMint() {
     try {
       setMintMessage("Ouverture de MetaMask...");
 
-      const claimArgs = {
-        _receiver: address,
-        _quantity: mintAmount, // Utilise mintAmount du state
-        _currency: '0x0000000000000000000000000000000000000000', // payer en Ether
-        _pricePerToken: parseEther("0.001"), // prix par NFT
-        _allowlistProof: {
-          proof: [],
-          quantityLimitPerWallet: '0',
-          pricePerToken: '0',
-          currency: '0x0000000000000000000000000000000000000000',
-        },
-        _data: '0x',
-      };
-
-      writeContract({
+      // Appel à claim(address to, uint256 amount) pour 1 NFT
+      await writeContract({
         address: CONTRACT_ADDRESS as `0x${string}`,
         abi: contractABI,
         functionName: "claim",
-        args: [claimArgs],
-        value: parseEther((0.001 * mintAmount).toString()), // Prix total basé sur la quantité
+        args: [address, 1], // 1 NFT pour le wallet connecté
+        value: parseEther("0.001"), // prix total pour 1 NFT
       });
 
     } catch (err: any) {
@@ -83,8 +70,8 @@ export function useMint() {
     setMintAmount,
     handleMint,
     loading: isWritePending || isTxLoading,
-    mintMessage,
     isTxLoading,
+    mintMessage,
     isTxSuccess,
     address,
   };

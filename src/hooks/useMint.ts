@@ -34,8 +34,21 @@ export function useMint() {
         address: CONTRACT_ADDRESS as `0x${string}`,
         abi: contractABI,
         functionName: "claim",
-        args: [address, 1], // 1 NFT pour le wallet connecté
-        value: parseEther("0"), // prix total pour 1 NFT
+        args: [
+          address,                      // _receiver
+          0,                            // _tokenId (update if you use another ID)
+          1,                            // _quantity
+          "0x0000000000000000000000000000000000000000",  // _currency (native)
+          0,                            // _pricePerToken
+          {
+            proof: [],
+            quantityLimitPerWallet: 0,
+            pricePerToken: 0,
+            currency: "0x0000000000000000000000000000000000000000",
+          },
+          "0x"                          // _data
+        ],
+        value: parseEther("0"),
       });
 
     } catch (err: any) {

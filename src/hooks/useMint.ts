@@ -5,7 +5,7 @@ import { parseEther } from "viem";
 import contractABI from "../lib/contractABI.json";
 
 // Adresse de ton contrat
-export const CONTRACT_ADDRESS = "0xe7F4ABC55d3B05a9bf7619400c1235Bb2A0cBF09";
+export const CONTRACT_ADDRESS = "0x698981548FA15810FE9FE5f41e9D9713f5e5DECe";
 
 export function useMint() {
   const [mintAmount, setMintAmount] = useState(1);

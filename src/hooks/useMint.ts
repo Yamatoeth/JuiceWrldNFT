@@ -1,30 +1,22 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseEther } from "viem";
 import contractABI from "../lib/contractABI.json";
 
-// Export your contract address here
+// Adresse de ton contrat
 export const CONTRACT_ADDRESS = "0xe7F4ABC55d3B05a9bf7619400c1235Bb2A0cBF09";
 
 export function useMint() {
   const [mintAmount, setMintAmount] = useState(1);
   const [mintMessage, setMintMessage] = useState<string | null>(null);
   const { address } = useAccount();
-  
-  // Hook moderne wagmi v2 pour écrire sur le contrat
-  const { 
-    writeContract,
-    data: txHash,
-    error: writeError,
-    isPending: isWritePending 
-  } = useWriteContract();
 
-  // Attendre la confirmation de transaction
-  const { 
-    isLoading: isTxLoading,
-    isSuccess: isTxSuccess 
-  } = useWaitForTransactionReceipt({
+  // Hook Wagmi pour écrire sur le contrat - pas besoin de signer dans wagmi v2
+  const { writeContract, data: txHash, error: writeError, isPending: isWritePending } = useWriteContract();
+
+  // Suivi de la transaction
+  const { isLoading: isTxLoading, isSuccess: isTxSuccess } = useWaitForTransactionReceipt({
     hash: txHash,
   });
 
@@ -36,24 +28,37 @@ export function useMint() {
 
     try {
       setMintMessage("Ouverture de MetaMask...");
-      
-      // Cette fonction déclenche automatiquement MetaMask
+
+      const claimArgs = {
+        _receiver: address,
+        _quantity: mintAmount, // Utilise mintAmount du state
+        _currency: '0x0000000000000000000000000000000000000000', // payer en Ether
+        _pricePerToken: parseEther("0.001"), // prix par NFT
+        _allowlistProof: {
+          proof: [],
+          quantityLimitPerWallet: '0',
+          pricePerToken: '0',
+          currency: '0x0000000000000000000000000000000000000000',
+        },
+        _data: '0x',
+      };
+
       writeContract({
         address: CONTRACT_ADDRESS as `0x${string}`,
         abi: contractABI,
         functionName: "claim",
-        args: [address, BigInt(mintAmount)],
-        value: parseEther("0.001"),
+        args: [claimArgs],
+        value: parseEther((0.001 * mintAmount).toString()), // Prix total basé sur la quantité
       });
-      
+
     } catch (err: any) {
       console.error("Mint error:", err);
       setMintMessage(`Erreur: ${err?.message || "Erreur inconnue"}`);
     }
   };
 
-  // Gestion des messages en fonction des états
-  React.useEffect(() => {
+  // Messages de statut
+  useEffect(() => {
     if (writeError) {
       let errorMsg = "Erreur: ";
       if (writeError.message.includes("User rejected")) {
@@ -78,8 +83,8 @@ export function useMint() {
     setMintAmount,
     handleMint,
     loading: isWritePending || isTxLoading,
-    isTxLoading,
     mintMessage,
+    isTxLoading,
     isTxSuccess,
     address,
   };

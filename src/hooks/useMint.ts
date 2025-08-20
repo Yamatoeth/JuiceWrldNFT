@@ -45,11 +45,11 @@ export function useMint() {
           "0x0000000000000000000000000000000000000000", // _currency (native)
           0n,                                           // _pricePerToken
           [
-            [], 
+            [],
             1n,
             0n,
             "0x0000000000000000000000000000000000000000"
-          ],                                            // _allowlistProof (tuple array)
+          ] as const,                                   // _allowlistProof (tuple array)
           "0x",                                         // _data
         ],
         value: 0n,

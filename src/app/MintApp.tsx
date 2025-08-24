@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import Header from "@/components/Header";
-import MintCard from "@/components/MintCard";
-import { useMint } from "@/hooks/useMint";
+import { Header } from "@/components/layout";
+import { MintCard } from "@/components/nft";
+import { useMint } from "@/hooks/contracts/claim";
 import Image from "next/image";
 
 export default function MintApp() {

@@ -6,23 +6,23 @@ import { Button } from "@/components/ui/button";
 interface MintCardProps {
   mintAmount: number;
   setMintAmount: (amount: number) => void;
-  handleMint: () => void;
-  loading: boolean;
+  isContractLoading: boolean;
   isTxLoading: boolean;
   mintMessage: string | null;
   isTxSuccess: boolean;
   address?: string;
+  handleMint: () => Promise<void>;
 }
 
 const MintCard: React.FC<MintCardProps> = ({
   mintAmount,
   setMintAmount,
-  handleMint,
-  loading,
+  isContractLoading,
   isTxLoading,
   mintMessage,
   isTxSuccess,
   address,
+  handleMint,
 }) => (
   <Card className="w-full md:w-[480px] bg-zinc-900/95 rounded-2xl shadow-2xl p-10 flex flex-col space-y-8 border border-zinc-700">
     <CardTitle className="text-3xl md:text-4xl font-mono font-extrabold text-white mb-2">JuiceWRLD NFT</CardTitle>
@@ -46,16 +46,6 @@ const MintCard: React.FC<MintCardProps> = ({
         className="px-3 py-1 rounded bg-zinc-700 text-white text-xs font-mono"
         onClick={() => setMintAmount(1)}
       >Max</Button>
-      <Button
-        className="px-6 py-2 rounded font-semibold shadow-md transition bg-blue-700 hover:bg-blue-800 text-white ml-2 flex items-center gap-2"
-        onClick={handleMint}
-        disabled={loading || isTxLoading}
-      >
-        {(loading || isTxLoading) ? (
-          <span className="animate-spin w-4 h-4 border-2 border-white border-t-blue-700 rounded-full mr-2"></span>
-        ) : null}
-        {(loading || isTxLoading) ? "Envoi..." : "Mint"}
-      </Button>
       {mintMessage && (
         <div className="mt-2 text-xs text-center text-blue-400 font-mono">{mintMessage}</div>
       )}
@@ -63,6 +53,14 @@ const MintCard: React.FC<MintCardProps> = ({
         <div className="mt-2 text-xs text-center text-green-400 font-mono">Mint réussi !</div>
       )}
     </div>
+    
+    <Button
+      onClick={handleMint}
+      disabled={!address || isContractLoading || isTxLoading}
+      className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold py-3 px-6 rounded-lg transition-all duration-200"
+    >
+      {isTxLoading ? "Minting..." : isContractLoading ? "Loading..." : "Mint NFT"}
+    </Button>
   </Card>
 );
 

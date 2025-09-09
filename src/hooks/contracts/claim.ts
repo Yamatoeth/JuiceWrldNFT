@@ -57,7 +57,7 @@ export function useMint() {
       setMintMessage("⏳ Envoi de la transaction...");
       
       // Utilisation de la méthode claim standard
-      const tx = await contract.claimTo(address, 0, mintAmount);
+      const tx = await contract.claimTo(address, 1, mintAmount);
       
       setMintMessage("⏳ En attente de confirmation...");
       
@@ -139,8 +139,32 @@ export function useClaim() {
     }
   };
 
+  const handleLazyMint = async () => {
+    if (!contract) {
+      console.error("Contract not initialized");
+      return false;
+    }
+    console.log("Starting lazy mint...");
+    try {
+      const txs = await contract.erc1155.lazyMint([
+        {
+          name: "JuiceWRLD NFT",
+          description: "Edition Drop",
+          image: "ipfs://QmXj2yX38DBWE79FbFhU8C5ETs1LisMXvpopV5Uh4ciDEw/1.png",
+        }
+      ]);
+      await txs[0].receipt;
+      console.log("Lazy mint successful!");
+      return true;
+    } catch (error) {
+      console.error("Lazy mint failed:", error);
+      return false;
+    }
+  };
+
   return {
     handleClaim,
+    handleLazyMint,
     isLoading: isLoading || isContractLoading,
     contract,
     address,

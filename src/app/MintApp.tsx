@@ -1,19 +1,16 @@
 "use client";
 import React from "react";
-import { Header } from "@/components/layout";
-import { MintCard } from "@/components/nft";
-import { useMint } from "@/hooks/contracts/claim";
+import Header from "@/components/layout/Header";
+import MintCard from "@/components/nft/MintCard";
 import Image from "next/image";
 
 export default function MintApp() {
-  const mintHook = useMint();
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       <Header />
       
       <main className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 pt-24">
           <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-4">
             JUICE WRLD
           </h1>
@@ -39,7 +36,7 @@ export default function MintApp() {
           </div>
 
           <div className="w-full max-w-md">
-            <MintCard {...mintHook} />
+            <MintCard />
           </div>
         </div>
 
@@ -47,7 +44,7 @@ export default function MintApp() {
           <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/20 max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-white mb-4">About</h3>
             <p className="text-gray-300 leading-relaxed">
-              This page was built with React for a modern and responsive interface. It integrates RainbowKit for seamless wallet connections, Wagmi for robust Ethereum interactions, and Thirdweb to deploy and interact easily with smart contracts. This project showcases my skills in web3 development, modern frontend integration, and blockchain interaction.
+              This page was built with React/Typescript for a modern and responsive interface. It integrates ThirdWeb SDK for seamless wallet connections, and to deploy and interact easily with smart contracts.
             </p>
           </div>
         </div>

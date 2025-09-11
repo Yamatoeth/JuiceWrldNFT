@@ -1,10 +1,11 @@
-import { ConnectWallet } from "@thirdweb-dev/react";
+import { ConnectButton } from "thirdweb/react";
+import { client } from "@/app/client";
 
 export function WalletButton() {
   return (
-    <ConnectWallet
+    <ConnectButton
+      client={client}
       theme="dark"
-      modalSize="compact"
     />
   );
 }

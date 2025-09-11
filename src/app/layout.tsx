@@ -1,7 +1,7 @@
 "use client";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import ThirdwebWrapper from "@/providers/ThirdwebWrapper";
+import ThirdwebWrapper from "@/provider/ThirdwebWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
